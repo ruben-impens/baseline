@@ -209,27 +209,3 @@ function baseline_replace_permission_ids($permissions) {
   }
   return $permissions;
 }
-
-/**
- * Create nodequeues.
- *
- * @param array $nodeqeueus
- *   An array of nodeqeues, keyed by machine name.
- */
-function baseline_build_nodequeues($nodequeues) {
-  foreach ($nodequeues as $nodequeue) {
-    $nodequeue = (object) $nodequeue;
-    // Fetch the nodequeue if it already exists so it can be updated instead of
-    // saved.
-    $existing_nodequeue = nodequeue_load_queue_by_name($nodequeue->name);
-    if (isset($existing_nodequeue->qid)) {
-      $nodequeue->qid = $existing_nodequeue->qid;
-      // Make sure the subqueues aren't added indefinitely.
-      if (isset($nodequeue->add_subqueue)) {
-        unset($nodequeue->add_subqueue);
-      }
-    }
-    // Save the new or updated nodequeue.
-    nodequeue_save($nodequeue);
-  }
-}
