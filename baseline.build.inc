@@ -234,27 +234,6 @@ function baseline_build_nodequeues($nodequeues) {
   }
 }
 
-
-/**
- * Creates or updates taxonomy vocabularies.
- *
- * @param array $vocabularies
- *   An array of vocabularies. See the return value of
- *   hook_baseline_info_taxonomy_vocabularies().
- */
-function baseline_build_taxonomy_vocabularies($vocabularies) {
-  $existing = taxonomy_vocabulary_get_names();
-  foreach ($vocabularies as $machine_name => $vocabulary) {
-    $vocabulary = (object) $vocabulary;
-    $vocabulary->machine_name = $machine_name;
-    // Check if the vocabulary doesn't already exist so we can update it.
-    if (isset($existing[$machine_name])) {
-      $vocabulary->vid = $existing[$machine_name]->vid;
-    }
-    taxonomy_vocabulary_save($vocabulary);
-  }
-}
-
 /**
  * Creates or updates taxonomy terms.
  *
