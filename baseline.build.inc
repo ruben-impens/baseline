@@ -161,8 +161,17 @@ function baseline_build_user_permissions($roles) {
 
   foreach ($roles as $rid => $permissions) {
     // Find out the role id if a machine name was used.
-    if (!is_numeric($rid) && isset($role_ids[$rid])) {
-      $rid = $role_ids[$rid];
+    if (!is_numeric($rid)) {
+      if (isset($role_ids[$rid])) {
+        $rid = $role_ids[$rid];
+      }
+      else {
+        // Try to get the rid by machine name for roles not created with baseline.
+        $user_roles = user_roles();
+        if (in_array($rid, $user_roles)) {
+          $rid = array_search($rid, $user_roles);
+        }
+      }
     }
     // Replace machine names by their ID within the current environment
     $permissions = baseline_replace_permission_ids($permissions);
